@@ -3,7 +3,7 @@ import {httpService} from "../services/httpService";
 export function toggleNode(node) {
     return {
         type: 'TOGGLE_NODE', //TODO put in const
-        node
+        path: node.path
     }
 }
 
@@ -30,7 +30,6 @@ export function getChildNodes(id, path) {
                 dispatch({
                     type: "GET_CHILDREN",
                     children: response,
-                    id: id,
                     path: path
                 })
             })

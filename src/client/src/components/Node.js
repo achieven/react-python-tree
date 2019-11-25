@@ -7,7 +7,7 @@ function Node ( state) {
         return <div>
             <button
                 onClick={() => state.toggleNode(state.tree)}
-
+                disabled={!state.tree.fetchedChildren}
                 style={{
                     marginLeft: '15px',
                     display: 'block'

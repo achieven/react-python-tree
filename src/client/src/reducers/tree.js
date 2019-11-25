@@ -15,7 +15,7 @@ const tree = (state = {}, action) => {
             const rootNode = newNode(action.id, action.name, '');
             return rootNode;
         case 'TOGGLE_NODE':
-            node = findNodeByPath(currentState, action.node.path);
+            node = findNodeByPath(currentState, action.path);
             node.showChildren = !node.showChildren;
             return currentState;
         default:

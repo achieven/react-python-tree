@@ -9,6 +9,7 @@ export function httpService (url, requestOptions) {
             }
             return bodyAsJson.content;
         }).catch(err => {
-            alert(err)
+            alert(`${url}:, ${err}`)
+            throw err;
         })
 }
