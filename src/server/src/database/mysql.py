@@ -1,5 +1,7 @@
 import sqlalchemy as db
 from sqlalchemy import exists
+from sqlalchemy.sql import exists
+
 
 import os
 
@@ -18,17 +20,22 @@ def getChildNodes(node_id):
     nodes = db.Table('nodes', metadata, autoload=True, autoload_with=engine)
     query = db.select([nodes]).where(edges.c.parent_id == node_id).select_from(edges.join(nodes))
     print(query)
-    print(node_id)
     Result = conn.execute(query)
     return Result.fetchall()
 
+
 def getRootNode():
     metadata = db.MetaData()
-    parent = db.Table('edges', metadata, autoload=True, autoload_with=engine)
-    child = db.Table('edges', metadata, autoload=True, autoload_with=engine)
-    query = db.select([db.exists(db.select[child].where(parent.c.parent_id == child.c.child_id))])
-    print(query)
-    print(node_id)
-    Result = conn.execute(query)
-    return Result.fetchall()
+    parent = db.Table('edges', metadata, autoload=True, autoload_with=engine).alias()
+    nodes = db.Table('nodes', metadata, autoload=True, autoload_with=engine)
+    child = db.Table('edges', metadata, autoload=True, autoload_with=engine).alias()
+    rootIdQuery = db.select([parent.c.parent_id]).where(db.not_(db.exists(db.select([child])).where(parent.c.parent_id == child.c.child_id))).distinct()
+    ResultRootId = conn.execute(rootIdQuery)
+    rootId = ResultRootId.fetchall()
+    rootQuery = db.select([nodes]).where(nodes.c.node_id == rootId[0].parent_id)
+    ResultRoot = conn.execute(rootQuery)
+    rootNode = ResultRoot.fetchall()
+    print(rootNode)
+    return rootNode[0]
+
 

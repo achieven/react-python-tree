@@ -1,3 +1,5 @@
+import {httpService} from "../services/httpService";
+
 export function toggleNode(node) {
     return {
         type: 'TOGGLE_NODE', //TODO put in const
@@ -5,10 +7,25 @@ export function toggleNode(node) {
     }
 }
 
+export function getRootNode() {
+    let rootNode = {};
+    return function(dispatch) {
+        return httpService(`http://localhost:5000/root`)
+            .then((response) => {
+                rootNode = response;
+                dispatch({
+                    type: "GET_ROOT",
+                    id: rootNode.node_id,
+                    name: rootNode.node_name
+                })
+                dispatch(getChildNodes(response.node_id, ""))
+            })
+    }
+}
+
 export function getChildNodes(id, path) {
     return function (dispatch) {
-        return fetch(`http://localhost:5000/children/${id}`)
-            .then(response => response.json())
+        return httpService(`http://localhost:5000/children/${id}`)
             .then(response => {
                 dispatch({
                     type: "GET_CHILDREN",
@@ -32,17 +49,5 @@ export function getChildrenNodes(children) {
             }
         }
         return Promise.all(promises)
-    }
-}
-
-export function getRootNode() {
-    return function(dispatch) {
-        const rootId = 1;
-        dispatch({
-            type: "GET_ROOT",
-            id: rootId,
-            name: 'root'
-        })
-        dispatch(getChildNodes(rootId, ""))
     }
 }

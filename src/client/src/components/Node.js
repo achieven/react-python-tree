@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 
 function Node ( state) {
+    if (0 < Object.keys(state.tree).length) {
         return <div>
             <button
                 onClick={() => state.toggleNode(state.tree)}
@@ -20,11 +21,13 @@ function Node ( state) {
                     display: state.tree.showChildren ? 'inline-block' : 'none'
                 }}
             >
-            {Object.keys(state.tree.children).map(function (key) {
-                return <Node key={key} tree={state.tree.children[key]} toggleNode={state.toggleNode}></Node>
-            })}
+                {Object.keys(state.tree.children).map(function (key) {
+                    return <Node key={key} tree={state.tree.children[key]} toggleNode={state.toggleNode}></Node>
+                })}
             </div>
         </div>
+    }
+    return null
 }
 
 Node.propTypes = {
