@@ -1,8 +1,12 @@
 import {httpService} from "../services/httpService";
 
+export const toggleNodeAction = 'TOGGLE_NODE';
+export const getChildrenAction = 'GET_CHILDREN';
+export const getRootAction = 'GET_ROOT';
+
 export function toggleNode(node) {
     return {
-        type: 'TOGGLE_NODE', //TODO put in const
+        type: toggleNodeAction,
         path: node.path
     }
 }
@@ -10,11 +14,11 @@ export function toggleNode(node) {
 export function getRootNode() {
     let rootNode = {};
     return function(dispatch) {
-        return httpService(`http://localhost:5000/root`)
+        return httpService(`root`)
             .then((response) => {
                 rootNode = response;
                 dispatch({
-                    type: "GET_ROOT",
+                    type: getRootAction,
                     id: rootNode.node_id,
                     name: rootNode.node_name
                 })
@@ -25,10 +29,10 @@ export function getRootNode() {
 
 export function getChildNodes(id, path) {
     return function (dispatch) {
-        return httpService(`http://localhost:5000/children/${id}`)
+        return httpService(`children/${id}`)
             .then(response => {
                 dispatch({
-                    type: "GET_CHILDREN",
+                    type: getChildrenAction,
                     children: response,
                     path: path
                 })

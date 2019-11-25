@@ -1,6 +1,8 @@
+const serverAddress = 'http://localhost:5000';
+
 export function httpService (url, requestOptions) {
     requestOptions = requestOptions || {};
-    return fetch(url, requestOptions)
+    return fetch(`${serverAddress}/${url}`, requestOptions)
         .then(response => response.text())
         .then(responseBodyAsText => {
             const bodyAsJson = JSON.parse(responseBodyAsText);
@@ -9,7 +11,7 @@ export function httpService (url, requestOptions) {
             }
             return bodyAsJson.content;
         }).catch(err => {
-            alert(`${url}:, ${err}`)
+            alert(`/${url}:\n ${err}`)
             throw err;
         })
 }

@@ -1,23 +1,24 @@
 import _ from 'lodash'
+import { toggleNodeAction, getChildrenAction, getRootAction } from "../actions/node";
 
 const tree = (state = {}, action) => {
     let node;
     let currentState = _.clone(state);
     switch (action.type) {
-        case 'GET_CHILDREN':
+        case toggleNodeAction:
+            node = findNodeByPath(currentState, action.path);
+            node.showChildren = !node.showChildren;
+            return currentState;
+        case getChildrenAction:
             node = findNodeByPath(currentState, action.path);
             node.fetchedChildren = true;
             action.children.forEach(child => {
                 node.children[child.node_id] = newNode(child.node_id, child.node_name, node.path + "." + child.node_id)
             });
             return currentState;
-        case 'GET_ROOT':
+        case getRootAction:
             const rootNode = newNode(action.id, action.name, '');
             return rootNode;
-        case 'TOGGLE_NODE':
-            node = findNodeByPath(currentState, action.path);
-            node.showChildren = !node.showChildren;
-            return currentState;
         default:
             return currentState
     }
