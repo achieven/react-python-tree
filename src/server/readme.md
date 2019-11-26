@@ -9,4 +9,4 @@ mysql -uroot -p tree < tree_dump.mysql
 
 #### running:
 
-DB_USER=<user> PASSWORD=<password> python3 index.py
+DB_USER=<user> PASSWORD=<password> python3 src/index.py
