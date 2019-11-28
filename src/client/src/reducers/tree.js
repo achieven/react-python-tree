@@ -1,39 +1,42 @@
 import _ from 'lodash'
-import { toggleNodeAction, getChildrenAction, getRootAction } from "../actions/node";
+import { toggleNodeAction, getChildrenAction, getRootAction } from "../actions/node"
 
 const tree = (state = {}, action) => {
-    let node;
-    let currentState = _.clone(state);
+    let node
+    let currentState = _.cloneDeep(state)
     switch (action.type) {
         case toggleNodeAction:
-            node = findNodeByPath(currentState, action.path);
-            node.showChildren = !node.showChildren;
-            return currentState;
+            node = findNodeByPath(currentState, action.path)
+            node.showChildren = !node.showChildren
+            return currentState
         case getChildrenAction:
-            node = findNodeByPath(currentState, action.path);
-            node.fetchedChildren = true;
-            action.children.forEach(child => {
-                node.children[child.node_id] = newNode(child.node_id, child.node_name, node.path + "." + child.node_id)
-            });
-            return currentState;
+            for (let child of action.children) {
+                node = findNodeByPath(currentState, child.path)
+                node.fetchedChildren = true
+                child.children.forEach(grandChild => {
+                    node.children[grandChild.node_id] = newNode(grandChild.node_id, grandChild.node_name, node.path + "." + grandChild.node_id)
+                })
+            }
+
+            return currentState
         case getRootAction:
-            const rootNode = newNode(action.id, action.name, '');
-            return rootNode;
+            const rootNode = newNode(action.id, action.name, '')
+            return rootNode
         default:
             return currentState
     }
 }
 function newNode (id, name, path) {
-    return {id: id, name: name, path: path, showChildren: false, fetchedChildren: false, children: {}}
+    return {id: id, name: name, path: path, showChildren: false, fetchedChildren: false, children: {}, shouldUpdate: false}
 }
 function findNodeByPath(state, path) {
-    let pathArr = path.split('.').filter(level => level);
-    let currentNode = state;
+    let pathArr = path.split('.').filter(level => level)
+    let currentNode = state
     while(pathArr.length > 0) {
         currentNode = currentNode.children[pathArr[0]]
         pathArr = pathArr.slice(1)
     }
-    return currentNode;
+    return currentNode
 }
 
 export default tree

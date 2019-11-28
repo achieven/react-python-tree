@@ -1,6 +1,8 @@
+import Node from "../components/Node"
 import { connect } from 'react-redux'
 import { toggleNode, getChildrenNodes } from '../actions/node'
-import Node from "../components/Node";
+
+
 
 
 function mapStateToProps(state){
@@ -11,16 +13,16 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
     return {
-        toggleNode: function (node) {
-            dispatch(getChildrenNodes(node.children)).then(() => {
-                dispatch(toggleNode(node))
-            })
+        toggleNode: async function (node) {
+            const childrenNodes = await getChildrenNodes(node.children)
+            dispatch(childrenNodes)
+            dispatch(toggleNode(node))
         }
     }
 }
 
-export default connect(
+const NodeConnector = connect(
     mapStateToProps,
     mapDispatchToProps
 )(Node)
-
+export default NodeConnector

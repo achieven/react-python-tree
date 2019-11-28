@@ -1,8 +1,8 @@
-import {httpService} from "../services/httpService";
+import {httpService} from "../services/httpService"
 
-export const toggleNodeAction = 'TOGGLE_NODE';
-export const getChildrenAction = 'GET_CHILDREN';
-export const getRootAction = 'GET_ROOT';
+export const toggleNodeAction = 'TOGGLE_NODE'
+export const getChildrenAction = 'GET_CHILDREN'
+export const getRootAction = 'GET_ROOT'
 
 export function toggleNode(node) {
     return {
@@ -11,46 +11,36 @@ export function toggleNode(node) {
     }
 }
 
-export function getRootNode() {
-    let rootNode = {};
-    return function(dispatch) {
-        return httpService(`root`)
-            .then((response) => {
-                rootNode = response;
-                dispatch({
-                    type: getRootAction,
-                    id: rootNode.node_id,
-                    name: rootNode.node_name
-                })
-                dispatch(getChildNodes(response.node_id, ""))
-            })
+export async function getRootNode() {
+    const rootNode =  await httpService(`root`)
+    return {
+        type: getRootAction,
+        id: rootNode.node_id,
+        name: rootNode.node_name
     }
 }
 
-export function getChildNodes(id, path) {
-    return function (dispatch) {
-        return httpService(`children/${id}`)
-            .then(response => {
-                dispatch({
-                    type: getChildrenAction,
-                    children: response,
-                    path: path
-                })
-            })
+export async function getChildNodes(id, path) {
+    const children = await httpService(`children/${id}`)
+    return {
+        path: path,
+        children: children
     }
 }
 
-export function getChildrenNodes(children) {
-    return function (dispatch) {
-        let promises = [];
-        for (let childKey in children) {
-            const child = children[childKey]
-            if (!child.fetchedChildren) {
-                promises.push(
-                    dispatch(getChildNodes(child.id, child.path))
-                )
-            }
+export async function getChildrenNodes(nodes) {
+    let promises = []
+    for (let key in nodes) {
+        const child = nodes[key]
+        if (!child.fetchedChildren) {
+            promises.push(
+                getChildNodes(child.id, child.path)
+            )
         }
-        return Promise.all(promises)
+    }
+    const childrenResponse = await Promise.all(promises)
+    return {
+        type: getChildrenAction,
+        children: childrenResponse,
     }
 }
