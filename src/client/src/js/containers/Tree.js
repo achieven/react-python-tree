@@ -5,13 +5,13 @@ import { toggleNode, getChildrenNodes } from '../actions/node'
 
 
 
-function mapStateToProps(state){
+const mapStateToProps = state => {
     return  {
         tree: state.tree
     }
 }
 
-function mapDispatchToProps(dispatch){
+const mapDispatchToProps = dispatch => {
     return {
         toggleNode: async function (node) {
             const childrenNodes = await getChildrenNodes(node.children)
@@ -21,8 +21,7 @@ function mapDispatchToProps(dispatch){
     }
 }
 
-const NodeConnector = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Node)
-export default NodeConnector

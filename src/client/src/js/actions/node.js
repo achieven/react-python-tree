@@ -4,14 +4,14 @@ export const toggleNodeAction = 'TOGGLE_NODE'
 export const getChildrenAction = 'GET_CHILDREN'
 export const getRootAction = 'GET_ROOT'
 
-export function toggleNode(node) {
+export const toggleNode = node => {
     return {
         type: toggleNodeAction,
         path: node.path
     }
 }
 
-export async function getRootNode() {
+export const getRootNode = async () => {
     const rootNode =  await httpService(`root`)
     return {
         type: getRootAction,
@@ -20,7 +20,7 @@ export async function getRootNode() {
     }
 }
 
-export async function getChildNodes(id, path) {
+export const getChildNodes = async (id, path) => {
     const children = await httpService(`children/${id}`)
     return {
         path: path,
@@ -41,6 +41,6 @@ export async function getChildrenNodes(nodes) {
     const childrenResponse = await Promise.all(promises)
     return {
         type: getChildrenAction,
-        children: childrenResponse,
+        children: childrenResponse
     }
 }

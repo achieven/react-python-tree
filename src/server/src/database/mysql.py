@@ -67,7 +67,6 @@ def get_root_node():
     root_query = db.select([nodes]).where(nodes.c.node_id == root_id[0].parent_id)
     result_root = conn.execute(root_query)
     root_node = result_root.fetchall()
-    print(root_node)
     return root_node[0]
 
 

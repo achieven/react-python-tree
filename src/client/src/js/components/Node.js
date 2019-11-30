@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import _ from "lodash"
-import '../public/css/node.scss'
+import '../../css/node.scss'
 
 class Node extends Component  {
     render() {

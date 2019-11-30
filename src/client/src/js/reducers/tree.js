@@ -1,15 +1,31 @@
 import _ from 'lodash'
 import { toggleNodeAction, getChildrenAction, getRootAction } from "../actions/node"
 
+
+const newNode = (id, name, path) => {
+    return { id: id, name: name, path: path, showChildren: false }
+}
+const findNodeByPath = (state, path) => {
+    let pathArr = path.split('.').filter(level => level)
+    let currentNode = state
+    while(pathArr.length > 0) {
+        currentNode = currentNode.children[pathArr[0]]
+        pathArr = pathArr.slice(1)
+    }
+    return currentNode
+}
+
+
 const tree = (state = {}, action) => {
-    let node
-    let currentState = _.cloneDeep(state)
+    let node, currentState
     switch (action.type) {
         case toggleNodeAction:
+            currentState = _.cloneDeep(state)
             node = findNodeByPath(currentState, action.path)
             node.showChildren = !node.showChildren
             return currentState
         case getChildrenAction:
+            currentState = _.cloneDeep(state)
             for (let child of action.children) {
                 node = findNodeByPath(currentState, child.path)
                 node.children = {}
@@ -23,20 +39,9 @@ const tree = (state = {}, action) => {
             const rootNode = newNode(action.id, action.name, '')
             return rootNode
         default:
-            return currentState
+            return state
     }
 }
-function newNode (id, name, path) {
-    return { id: id, name: name, path: path, showChildren: false }
-}
-function findNodeByPath(state, path) {
-    let pathArr = path.split('.').filter(level => level)
-    let currentNode = state
-    while(pathArr.length > 0) {
-        currentNode = currentNode.children[pathArr[0]]
-        pathArr = pathArr.slice(1)
-    }
-    return currentNode
-}
+
 
 export default tree
