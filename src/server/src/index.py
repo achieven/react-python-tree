@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_cors import CORS
-import database.mysql as mysql
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "http://localhost:3000"}})
 
+import database.mysql as mysql
 
 @app.route("/children/<node_id>")
 def get_child_nodes(node_id):
@@ -12,7 +12,7 @@ def get_child_nodes(node_id):
         node_id = int(node_id)
         next_nodes = mysql.get_child_nodes(node_id)
         print(next_nodes)
-        return dict({"error": False, "content": [dict(node) for node in next_nodes]})
+        return dict({"error": False, "content": next_nodes})
     except Exception as e:
         print(e)
         return dict({"error": True, "content": str(e)})
