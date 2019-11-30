@@ -4,13 +4,13 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "http://localhost:3000"}})
 
-import database.mysql as mysql
+import controllers.tree as tree
 
 @app.route("/children/<node_id>")
 def get_child_nodes(node_id):
     try:
         node_id = int(node_id)
-        child_nodes = mysql.get_child_nodes(node_id)
+        child_nodes = tree.get_child_nodes(node_id)
         return dict({"error": False, "content": child_nodes})
     except Exception as e:
         print(e)
@@ -20,8 +20,7 @@ def get_child_nodes(node_id):
 @app.route("/root")
 def get_root_node():
     try:
-        root_node = mysql.get_root_node()
-
+        root_node = tree.get_root_node()
         return dict({"error": False, "content": dict(root_node)})
     except Exception as e:
         print(e)
