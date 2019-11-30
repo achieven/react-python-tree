@@ -1,7 +1,8 @@
 #### prerequesites:
 
 pip3  
-python3    
+python3
+mysql (specifically was developed with mysql 8.0.16)
 
 #### installing:
 pip3 install -r requirements.txt  
