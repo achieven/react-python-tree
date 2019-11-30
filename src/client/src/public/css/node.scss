@@ -1,0 +1,13 @@
+.node {
+  margin-left: 15px;
+  display: block;
+}
+
+.children {
+  margin-left: 15px;
+  display: none;
+
+  &.open {
+    display: inline-block;
+  }
+}

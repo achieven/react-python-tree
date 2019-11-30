@@ -32,7 +32,7 @@ export async function getChildrenNodes(nodes) {
     let promises = []
     for (let key in nodes) {
         const child = nodes[key]
-        if (!child.fetchedChildren) {
+        if (!child.children) {
             promises.push(
                 getChildNodes(child.id, child.path)
             )

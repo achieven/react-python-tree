@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import _ from "lodash"
+import '../public/css/node.scss'
 
 class Node extends Component  {
     render() {
@@ -8,23 +9,16 @@ class Node extends Component  {
             return <div>
                 <button
                     onClick={() => this.props.toggleNode(this.props.tree)}
-                    disabled={!this.props.tree.fetchedChildren}
-                    style={{
-                        marginLeft: '15px',
-                        display: 'block'
-                    }}
+                    className="node"
                 >
                     {this.props.tree.name}
                 </button>
                 <div
-                    style={{
-                        marginLeft: '15px',
-                        display: this.props.tree.showChildren ? 'inline-block' : 'none'
-                    }}
+                    className={`children ${this.props.tree.showChildren ? 'open' : ''}`}
                 >
-                    {Object.keys(this.props.tree.children).map((key) => {
+                    {this.props.tree.children ? Object.keys(this.props.tree.children).map((key) => {
                         return <Node key={key} tree={this.props.tree.children[key]} toggleNode={this.props.toggleNode}></Node>
-                    })}
+                    }) : null}
                 </div>
             </div>
         }

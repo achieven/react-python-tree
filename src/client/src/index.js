@@ -11,7 +11,7 @@ import rootReducer from './reducers'
 const store = createStore(rootReducer, applyMiddleware(thunk))
 async function init () {
     const rootNode = await getRootNode()
-    const node = {id: rootNode.id, path: "", fetchedChildren: false}
+    const node = {id: rootNode.id, path: ""}
     const childrenResponse = await getChildrenNodes([node])
     store.dispatch(rootNode)
     store.dispatch(childrenResponse)

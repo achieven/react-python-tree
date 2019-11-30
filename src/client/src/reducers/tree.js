@@ -12,7 +12,7 @@ const tree = (state = {}, action) => {
         case getChildrenAction:
             for (let child of action.children) {
                 node = findNodeByPath(currentState, child.path)
-                node.fetchedChildren = true
+                node.children = {}
                 child.children.forEach(grandChild => {
                     node.children[grandChild.node_id] = newNode(grandChild.node_id, grandChild.node_name, node.path + "." + grandChild.node_id)
                 })
@@ -27,7 +27,7 @@ const tree = (state = {}, action) => {
     }
 }
 function newNode (id, name, path) {
-    return {id: id, name: name, path: path, showChildren: false, fetchedChildren: false, children: {}, shouldUpdate: false}
+    return { id: id, name: name, path: path, showChildren: false }
 }
 function findNodeByPath(state, path) {
     let pathArr = path.split('.').filter(level => level)
