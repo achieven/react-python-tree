@@ -24,7 +24,7 @@ class EdgeModel(Base):
                      db.ForeignKey(NodeModel.node_id),
                      primary_key=True,
                      nullable=False)
-    child_node = orm.relationship("NodeModel", foreign_keys=[child_id], primaryjoin="NodeModel.node_id == EdgeModel.child_id", lazy="select", innerjoin=True)
+    child_node = orm.relationship("NodeModel", foreign_keys=[child_id], primaryjoin="NodeModel.node_id == EdgeModel.child_id", lazy=False, innerjoin=True)
 
 def get_child_nodes(node_id):
     try:
