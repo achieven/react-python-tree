@@ -17,8 +17,8 @@ const mapDispatchToProps = dispatch => {
         toggleNode: async (node, fetchedGrandchildren) => {
             if (!fetchedGrandchildren) {
                 const childrenNodes = await getChildrenNodes(node.children)
-                dispatch(getGrandchildrenNodes(node.id))
                 dispatch(childrenNodes)
+                dispatch(getGrandchildrenNodes(node.id))
             }
 
             dispatch(toggleNode(node.path))
