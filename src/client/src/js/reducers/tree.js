@@ -5,6 +5,7 @@ import { toggleNodeAction, getChildrenAction, getRootAction } from '../actions/t
 const newNode = (id, name, path) => {
     return { id: id, name: name, path: path, showChildren: false }
 }
+
 const findNodeByPath = (state, path) => {
     let pathArr = path.split('.').filter(level => level)
     let currentNode = state
@@ -30,7 +31,7 @@ const tree = (state = {}, action) => {
                 node = findNodeByPath(currentState, child.path)
                 node.children = {}
                 child.children.forEach(grandChild => {
-                    node.children[grandChild.node_id] = newNode(grandChild.node_id, grandChild.node_name, node.path + '.' + grandChild.node_id)
+                    node.children[grandChild.node_id] = newNode(grandChild.node_id, grandChild.node_name, `${node.path}.${grandChild.node_id}`)
                 })
             }
 
