@@ -1,22 +1,23 @@
-import Node from "../components/Node"
+import Node from '../components/Node'
 import { connect } from 'react-redux'
-import { toggleNode, getChildrenNodes } from '../actions/tree'
+import { toggleNode, getChildrenNodes, getGrandchildrenNodes } from '../actions/tree'
 
 
 
 
 const mapStateToProps = state => {
     return  {
-        tree: state.tree
+        tree: state.tree,
+        fetchedGrandchildren: state.fetchedGrandchildren
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        toggleNode: async (node) => {
-            if (!node.fetchedGrandchildren) {
-                const isFetchingGrandchildren = true
-                const childrenNodes = await getChildrenNodes(node.path, isFetchingGrandchildren, node.children)
+        toggleNode: async (node, fetchedGrandchildren) => {
+            if (!fetchedGrandchildren.has(node.id)) {
+                const childrenNodes = await getChildrenNodes(node.children)
+                dispatch(getGrandchildrenNodes(node.id))
                 dispatch(childrenNodes)
             }
 

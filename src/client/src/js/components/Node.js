@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import _ from "lodash"
+import _ from 'lodash'
 import '../../css/node.scss'
 
 class Node extends Component  {
@@ -8,7 +8,7 @@ class Node extends Component  {
         if (0 < Object.keys(this.props.tree).length) {
             return <div>
                 <button
-                    onClick={() => this.props.toggleNode(this.props.tree)}
+                    onClick={() => this.props.toggleNode(this.props.tree, this.props.fetchedGrandchildren)}
                     className="node"
                 >
                     {this.props.tree.name}
@@ -17,7 +17,7 @@ class Node extends Component  {
                     className={`children ${this.props.tree.showChildren ? 'open' : ''}`}
                 >
                     {this.props.tree.children ? Object.keys(this.props.tree.children).map((key) => {
-                        return <Node key={key} tree={this.props.tree.children[key]} toggleNode={this.props.toggleNode}></Node>
+                        return <Node key={key} tree={this.props.tree.children[key]} toggleNode={this.props.toggleNode} fetchedGrandchildren={this.props.fetchedGrandchildren}></Node>
                     }) : null}
                 </div>
             </div>

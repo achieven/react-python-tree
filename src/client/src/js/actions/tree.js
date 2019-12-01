@@ -1,13 +1,21 @@
-import {httpService} from "../services/httpService"
+import {httpService} from '../services/httpService'
 
 export const toggleNodeAction = 'TOGGLE_NODE'
 export const getChildrenAction = 'GET_CHILDREN'
+export const getGrandchildrenAction = 'GET_GRANDCHILDREN'
 export const getRootAction = 'GET_ROOT'
 
 export const toggleNode = node => {
     return {
         type: toggleNodeAction,
         path: node.path
+    }
+}
+
+export const getGrandchildrenNodes = id => {
+    return {
+        type: getGrandchildrenAction,
+        id: id
     }
 }
 
@@ -28,7 +36,7 @@ export const getChildNodes = async (id, path) => {
     }
 }
 
-export const getChildrenNodes = async (parentPath, isFechingGrandchildren, nodes) => {
+export const getChildrenNodes = async (nodes) => {
     let promises = []
     for (let key in nodes) {
         const child = nodes[key]
@@ -41,8 +49,6 @@ export const getChildrenNodes = async (parentPath, isFechingGrandchildren, nodes
     const childrenResponse = await Promise.all(promises)
     return {
         type: getChildrenAction,
-        children: childrenResponse,
-        parentPath: parentPath,
-        isFechingGrandchildren: isFechingGrandchildren
+        children: childrenResponse
     }
 }
