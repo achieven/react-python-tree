@@ -33,7 +33,6 @@ def get_child_nodes(node_id):
         response = [dict({"node_id": node.child_node.node_id, "node_name": node.child_node.node_name}) for node in result]
         return response
     except Exception as e:
-        print(e)
         mysql.session.rollback()
         raise e
 
@@ -55,5 +54,4 @@ def get_root_node():
         root_node = result_root.fetchall()
         return root_node[0]
     except Exception as e:
-        print(e)
         raise e
