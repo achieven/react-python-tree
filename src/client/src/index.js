@@ -5,14 +5,15 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 
 import App from './js/components/App'
-import { getRootNode, getChildrenNodes } from './js/actions/node'
+import { getRootNode, getChildrenNodes } from './js/actions/tree'
 import rootReducer from './js/reducers'
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 const init = async () => {
     const rootNode = await getRootNode()
     const node = {id: rootNode.id, path: ""}
-    const childrenResponse = await getChildrenNodes([node])
+    const isFetchingGrandchildren = false
+    const childrenResponse = await getChildrenNodes(node,isFetchingGrandchildren, [node])
     store.dispatch(rootNode)
     store.dispatch(childrenResponse)
 }

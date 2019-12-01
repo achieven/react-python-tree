@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { toggleNodeAction, getChildrenAction, getRootAction } from "../actions/node"
+import { toggleNodeAction, getChildrenAction, getRootAction } from "../actions/tree"
 
 
 const newNode = (id, name, path) => {
@@ -26,6 +26,10 @@ const tree = (state = {}, action) => {
             return currentState
         case getChildrenAction:
             currentState = _.cloneDeep(state)
+            if (action.isFechingGrandchildren) {
+                const parentNode = findNodeByPath(currentState, action.parentPath)
+                parentNode.fetchedGrandchildren = true
+            }
             for (let child of action.children) {
                 node = findNodeByPath(currentState, child.path)
                 node.children = {}

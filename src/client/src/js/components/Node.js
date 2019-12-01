@@ -36,4 +36,3 @@ Node.propTypes = {
 }
 
 export default Node
-``

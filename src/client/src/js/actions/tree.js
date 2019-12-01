@@ -28,7 +28,7 @@ export const getChildNodes = async (id, path) => {
     }
 }
 
-export async function getChildrenNodes(nodes) {
+export const getChildrenNodes = async (parentPath, isFechingGrandchildren, nodes) => {
     let promises = []
     for (let key in nodes) {
         const child = nodes[key]
@@ -41,6 +41,8 @@ export async function getChildrenNodes(nodes) {
     const childrenResponse = await Promise.all(promises)
     return {
         type: getChildrenAction,
-        children: childrenResponse
+        children: childrenResponse,
+        parentPath: parentPath,
+        isFechingGrandchildren: isFechingGrandchildren
     }
 }
