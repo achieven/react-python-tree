@@ -24,13 +24,13 @@ class EdgeModel(Base):
                      db.ForeignKey(NodeModel.node_id),
                      primary_key=True,
                      nullable=False)
-    child_name = orm.relationship("NodeModel", foreign_keys=[child_id], primaryjoin="NodeModel.node_id == EdgeModel.child_id", lazy="select", innerjoin=True)
+    child_node = orm.relationship("NodeModel", foreign_keys=[child_id], primaryjoin="NodeModel.node_id == EdgeModel.child_id", lazy="select", innerjoin=True)
 
 def get_child_nodes(node_id):
     try:
-        query = mysql.session.query(EdgeModel).options(orm.joinedload(EdgeModel.child_name)).filter_by(parent_id=node_id)
+        query = mysql.session.query(EdgeModel).options(orm.joinedload(EdgeModel.child_node)).filter_by(parent_id=node_id)
         result = query.all()
-        response = [dict({"node_id": node.child_name.node_id, "node_name": node.child_name.node_name}) for node in result]
+        response = [dict({"node_id": node.child_node.node_id, "node_name": node.child_node.node_name}) for node in result]
         return response
     except Exception as e:
         print(e)
