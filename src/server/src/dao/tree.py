@@ -18,7 +18,7 @@ class EdgeModel(Base):
     __tablename__ = "edges"
 
     parent_id = db.Column(db.Integer,
-                          db.ForeignKey(NodeModel.node_id),
+                     db.ForeignKey(NodeModel.node_id),
                      nullable=False)
     child_id = db.Column(db.Integer,
                      db.ForeignKey(NodeModel.node_id),
