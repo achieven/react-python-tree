@@ -1,6 +1,6 @@
 const serverAddress = 'http://localhost:5000'
 
-export async function httpService (url, requestOptions) {
+export const httpService = async (url, requestOptions) => {
     requestOptions = requestOptions || {}
     try {
         const response = await fetch(`${serverAddress}/${url}`, requestOptions)

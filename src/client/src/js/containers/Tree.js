@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        toggleNode: async function (node) {
+        toggleNode: async (node) => {
             if (!node.fetchedGrandchildren) {
                 const isFetchingGrandchildren = true
                 const childrenNodes = await getChildrenNodes(node.path, isFetchingGrandchildren, node.children)
