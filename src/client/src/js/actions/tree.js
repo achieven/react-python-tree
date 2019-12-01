@@ -1,4 +1,4 @@
-import {httpService} from '../services/httpService'
+import { httpService } from '../services/httpService'
 
 export const toggleNodeAction = 'TOGGLE_NODE'
 export const getChildrenAction = 'GET_CHILDREN'
