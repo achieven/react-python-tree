@@ -26,7 +26,6 @@ class Node extends Component  {
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        console.log(this.props.tree.id, " going to render? ", !_.isEqual(this.props.tree, nextProps.tree))
         return !_.isEqual(this.props.tree, nextProps.tree)
     }
 }
@@ -37,3 +36,4 @@ Node.propTypes = {
 }
 
 export default Node
+``
