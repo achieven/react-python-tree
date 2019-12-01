@@ -3,7 +3,7 @@ import { getGrandchildrenAction } from '../actions/tree'
 
 
 
-const fetchdeGrandchildren = (state = new Set(), action) => {
+const fetchedGrandchildren = (state = new Set(), action) => {
     switch (action.type) {
         case getGrandchildrenAction:
             const currentState = _.clone(state)
@@ -15,4 +15,4 @@ const fetchdeGrandchildren = (state = new Set(), action) => {
 }
 
 
-export default fetchdeGrandchildren
+export default fetchedGrandchildren
