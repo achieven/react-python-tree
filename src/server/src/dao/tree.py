@@ -40,16 +40,20 @@ def get_child_nodes(node_id):
 
 
 def get_root_node():
-    metadata = db.MetaData()
-    parent = db.Table('edges', metadata, autoload=True, autoload_with=mysql.engine).alias()
-    nodes = db.Table('nodes', metadata, autoload=True, autoload_with=mysql.engine)
-    child = db.Table('edges', metadata, autoload=True, autoload_with=mysql.engine).alias()
-    root_id_query = db.select([parent.c.parent_id])\
-        .where(db.not_(db.exists(db.select([child])).where(parent.c.parent_id == child.c.child_id)))\
-        .distinct()
-    result_root_id = mysql.conn.execute(root_id_query)
-    root_id = result_root_id.fetchall()
-    root_query = db.select([nodes]).where(nodes.c.node_id == root_id[0].parent_id)
-    result_root = mysql.conn.execute(root_query)
-    root_node = result_root.fetchall()
-    return root_node[0]
+    try:
+        metadata = db.MetaData()
+        parent = db.Table('edges', metadata, autoload=True, autoload_with=mysql.engine).alias()
+        nodes = db.Table('nodes', metadata, autoload=True, autoload_with=mysql.engine)
+        child = db.Table('edges', metadata, autoload=True, autoload_with=mysql.engine).alias()
+        root_id_query = db.select([parent.c.parent_id])\
+            .where(db.not_(db.exists(db.select([child])).where(parent.c.parent_id == child.c.child_id)))\
+            .distinct()
+        result_root_id = mysql.conn.execute(root_id_query)
+        root_id = result_root_id.fetchall()
+        root_query = db.select([nodes]).where(nodes.c.node_id == root_id[0].parent_id)
+        result_root = mysql.conn.execute(root_query)
+        root_node = result_root.fetchall()
+        return root_node[0]
+    except Exception as e:
+        print(e)
+        raise e
