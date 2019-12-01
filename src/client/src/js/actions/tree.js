@@ -28,7 +28,7 @@ export const getRootNode = async () => {
     }
 }
 
-export const getChildNodes = async (id, path) => {
+const getChildNodes = async (id, path) => {
     const children = await httpService(`children/${id}`)
     return {
         path: path,
