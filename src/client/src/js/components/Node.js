@@ -8,7 +8,7 @@ class Node extends Component  {
         if (0 < Object.keys(this.props.tree).length) {
             return <div>
                 <button
-                    onClick={() => this.props.toggleNode(this.props.tree, this.props.fetchedGrandchildren)}
+                    onClick={() => this.props.toggleNode(this.props.tree, this.props.fetchedGrandchildren.has(this.props.tree.id))}
                     className="node"
                 >
                     {this.props.tree.name}

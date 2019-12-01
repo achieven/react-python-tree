@@ -5,10 +5,10 @@ export const getChildrenAction = 'GET_CHILDREN'
 export const getGrandchildrenAction = 'GET_GRANDCHILDREN'
 export const getRootAction = 'GET_ROOT'
 
-export const toggleNode = node => {
+export const toggleNode = path => {
     return {
         type: toggleNodeAction,
-        path: node.path
+        path: path
     }
 }
 
