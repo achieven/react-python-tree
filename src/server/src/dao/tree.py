@@ -3,8 +3,6 @@ import sqlalchemy.orm as orm
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
-import database.mysql as mysql
-
 class NodeModel(Base):
     __tablename__ = "nodes"
 
@@ -29,22 +27,21 @@ class EdgeModel(Base):
 
 
 
-def get_child_nodes(node_id):
+def get_child_nodes(session, node_id):
     try:
-        query = mysql.session.query(EdgeModel).options(orm.joinedload(EdgeModel.child_node)).filter_by(parent_id=node_id)
+        query = session.query(EdgeModel).options(orm.joinedload(EdgeModel.child_node)).filter_by(parent_id=node_id)
         result = query.all()
         response = [dict({"node_id": node.child_node.node_id, "node_name": node.child_node.node_name}) for node in result]
         return response
     except Exception as e:
-        mysql.session.remove()
         raise e
 
 
 
-def get_root_node():
+def get_root_node(session):
     try:
-        query = mysql.session.query(EdgeModel)\
-            .filter(~EdgeModel.parent_id.in_(map(get_child_id, mysql.session.query(EdgeModel.child_id).all()))) \
+        query = session.query(EdgeModel)\
+            .filter(~EdgeModel.parent_id.in_(map(get_child_id, session.query(EdgeModel.child_id).all()))) \
             .options(orm.joinedload(EdgeModel.parent_node))
         result = query.all()
         root_node = list({node['node_id']: node for node in map(get_node, result)}.values())
@@ -54,7 +51,6 @@ def get_root_node():
             raise Exception("A single root node could not be determined")
         return root_node[0]
     except Exception as e:
-        mysql.session.remove()
         raise e
 
 def get_child_id(edge):

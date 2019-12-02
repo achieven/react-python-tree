@@ -6,6 +6,7 @@ CORS(app, resources={r"*": {"origins": "http://localhost:3000"}})
 
 import controllers.tree as tree
 
+
 @app.route("/children/<node_id>")
 def get_child_nodes(node_id):
     try:
