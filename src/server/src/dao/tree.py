@@ -25,6 +25,9 @@ class EdgeModel(Base):
                      primary_key=True,
                      nullable=False)
     child_node = orm.relationship("NodeModel", foreign_keys=[child_id], primaryjoin="NodeModel.node_id == EdgeModel.child_id", lazy=False, innerjoin=True)
+    parent_node = orm.relationship("NodeModel", foreign_keys=[parent_id], primaryjoin="NodeModel.node_id == EdgeModel.parent_id", lazy=False, innerjoin=True)
+
+
 
 def get_child_nodes(node_id):
     try:
@@ -33,25 +36,29 @@ def get_child_nodes(node_id):
         response = [dict({"node_id": node.child_node.node_id, "node_name": node.child_node.node_name}) for node in result]
         return response
     except Exception as e:
-        mysql.session.rollback()
+        mysql.session.remove()
         raise e
 
 
 
 def get_root_node():
     try:
-        metadata = db.MetaData()
-        parent = db.Table('edges', metadata, autoload=True, autoload_with=mysql.engine).alias()
-        nodes = db.Table('nodes', metadata, autoload=True, autoload_with=mysql.engine)
-        child = db.Table('edges', metadata, autoload=True, autoload_with=mysql.engine).alias()
-        root_id_query = db.select([parent.c.parent_id])\
-            .where(db.not_(db.exists(db.select([child])).where(parent.c.parent_id == child.c.child_id)))\
-            .distinct()
-        result_root_id = mysql.conn.execute(root_id_query)
-        root_id = result_root_id.fetchall()
-        root_query = db.select([nodes]).where(nodes.c.node_id == root_id[0].parent_id)
-        result_root = mysql.conn.execute(root_query)
-        root_node = result_root.fetchall()
+        query = mysql.session.query(EdgeModel)\
+            .filter(~EdgeModel.parent_id.in_(map(get_child_id, mysql.session.query(EdgeModel.child_id).all()))) \
+            .options(orm.joinedload(EdgeModel.parent_node))
+        result = query.all()
+        root_node = list({node['node_id']: node for node in map(get_node, result)}.values())
+        if 0 == len(root_node):
+            raise Exception("No root was found")
+        elif 1 != len(root_node):
+            raise Exception("A single root node could not be determined")
         return root_node[0]
     except Exception as e:
+        mysql.session.remove()
         raise e
+
+def get_child_id(edge):
+    return edge.child_id
+
+def get_node(node):
+    return dict({"node_id": node.parent_node.node_id, "node_name": node.parent_node.node_name})

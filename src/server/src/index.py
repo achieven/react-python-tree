@@ -21,7 +21,7 @@ def get_child_nodes(node_id):
 def get_root_node():
     try:
         root_node = tree.get_root_node()
-        return dict({"error": False, "content": dict(root_node)})
+        return dict({"error": False, "content": root_node})
     except Exception as e:
         print(e)
         return dict({"error": True, "content": str(e)})
