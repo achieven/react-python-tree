@@ -4,16 +4,13 @@ export const httpService = async (url, requestOptions) => {
     requestOptions = requestOptions || {}
     try {
         const response = await fetch(`${serverAddress}/${url}`, requestOptions)
-        const responseBodyAsText = await response.text()
-        const bodyAsJson = JSON.parse(responseBodyAsText)
-        if (bodyAsJson.error) {
-            throw bodyAsJson.content
+        const body = await response.json()
+        if (!body.content) {
+            throw body.message
         }
-        return bodyAsJson.content
+        return body.content
     } catch(err) {
         alert(`/${url}:\n ${err}`)
         throw err
     }
-
-
 }
