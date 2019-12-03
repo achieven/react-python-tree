@@ -40,9 +40,11 @@ def get_child_nodes(session, node_id):
 
 def get_root_node(session):
     try:
-        query = session.query(EdgeModel)\
-            .filter(~EdgeModel.parent_id.in_(map(get_child_id, session.query(EdgeModel.child_id).all()))) \
-            .options(orm.joinedload(EdgeModel.parent_node))
+        all_children_query = session.query(EdgeModel.child_id).subquery()
+        query = session.query(EdgeModel) \
+            .filter(~EdgeModel.parent_id.in_(all_children_query)) \
+            .options(orm.joinedload(EdgeModel.parent_node))\
+            .distinct()
         result = query.all()
         root_node = list({node['node_id']: node for node in map(get_node, result)}.values())
         if 0 == len(root_node):
