@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
+
 import tree from './tree'
-import fetchedGrandchildren from './fetchedGrandchildren'
+import openNodes from './openNodes'
 
 export default combineReducers({
     tree,
-    fetchedGrandchildren
+    openNodes
 })

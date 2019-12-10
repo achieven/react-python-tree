@@ -1,39 +1,18 @@
 import _ from 'lodash'
-import { toggleNodeAction, getChildrenAction, getRootAction } from '../actions/tree'
 
-
-const newNode = (id, name, path) => {
-    return { id: id, name: name, path: path, showChildren: false }
-}
-
-const findNodeByPath = (state, path) => {
-    let pathArr = path.split('.').filter(level => level)
-    let currentNode = state
-    while(pathArr.length > 0) {
-        currentNode = currentNode.children[pathArr[0]]
-        pathArr = pathArr.slice(1)
-    }
-    return currentNode
-}
-
+import { getChildrenAction, getRootAction } from '../actions/tree'
+import { findNodeByPath, newNode } from "../util/tree";
 
 const tree = (state = {}, action) => {
     let node, currentState
     switch (action.type) {
-        case toggleNodeAction:
-            currentState = _.cloneDeep(state)
-            node = findNodeByPath(currentState, action.path)
-            node.showChildren = !node.showChildren
-            return currentState
         case getChildrenAction:
             currentState = _.cloneDeep(state)
-            for (let child of action.children) {
-                node = findNodeByPath(currentState, child.path)
-                node.children = {}
-                child.children.forEach(grandChild => {
-                    node.children[grandChild.node_id] = newNode(grandChild.node_id, grandChild.node_name, `${node.path}.${grandChild.node_id}`)
-                })
-            }
+            node = findNodeByPath(currentState, action.path)
+            node.children = {}
+            action.children.forEach(child => {
+                node.children[child.node_id] = newNode(child.node_id, child.node_name, `${node.path}.${child.node_id}`)
+            })
 
             return currentState
         case getRootAction:
