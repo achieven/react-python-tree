@@ -11,13 +11,3 @@ export const findNodeByPath = (state, path) => {
     }
     return currentNode
 }
-
-export const getDescendants = node => {
-    let res = [node.id]
-    if (node.children) {
-        for (let key in node.children) {
-            res = [].concat(res, getDescendants(node.children[key]))
-        }
-    }
-    return res
-}

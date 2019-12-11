@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 
 import '../../css/node.scss'
-import { getDescendants } from "../util/tree";
 
 class Node extends Component  {
     render() {
@@ -16,7 +15,7 @@ class Node extends Component  {
                     {this.props.tree.name}
                 </button>
                 <div
-                    className={`children ${this.props.openNodes.has(this.props.tree.id)? 'open' : ''}`}
+                    className={`children ${this.props.openNodes.has(this.props.tree.id) ? 'open' : ''}`}
                 >
                     {this.props.tree.children ? Object.keys(this.props.tree.children).map(key => {
                         return <Node key={key} tree={this.props.tree.children[key]} toggleNode={this.props.toggleNode} openNodes={this.props.openNodes}></Node>
@@ -28,15 +27,10 @@ class Node extends Component  {
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
-        const descendants = getDescendants(nextProps.tree)
-        const nextPropsOpenNodes = descendants.map(descendant => {
-            return nextProps.openNodes.has(descendant)
-        })
-        const thisPropsOpenNodes = descendants.map(descendant => {
-            return this.props.openNodes.has(descendant)
-        })
-        const shouldUpdate = '' === nextProps.tree.path || !_.isEqual(nextPropsOpenNodes, thisPropsOpenNodes)
-
+        const isFirstTime = _.isEmpty(this.props.tree)
+        const isNodeOpen = nextProps.openNodes.has(nextProps.tree.id)
+        const isNodeToggled = nextProps.openNodes.has(nextProps.tree.id) !== this.props.openNodes.has(nextProps.tree.id)
+        const shouldUpdate = isFirstTime || isNodeOpen || isNodeToggled
         return shouldUpdate
     }
 }
