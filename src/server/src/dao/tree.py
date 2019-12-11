@@ -29,7 +29,9 @@ class EdgeModel(Base):
 
 def get_child_nodes(session, node_id):
     try:
-        query = session.query(EdgeModel).options(orm.joinedload(EdgeModel.child_node)).filter_by(parent_id=node_id)
+        query = session.query(EdgeModel).\
+            options(orm.joinedload(EdgeModel.child_node)).\
+            filter_by(parent_id=node_id)
         result = query.all()
         response = [dict({"node_id": node.child_node.node_id, "node_name": node.child_node.node_name}) for node in result]
         return response
@@ -41,17 +43,12 @@ def get_child_nodes(session, node_id):
 def get_root_node(session):
     try:
         all_children_query = session.query(EdgeModel.child_id).subquery()
-        query = session.query(EdgeModel) \
-            .filter(~EdgeModel.parent_id.in_(all_children_query)) \
-            .options(orm.joinedload(EdgeModel.parent_node))\
+        query = session.query(NodeModel).\
+            select_from(EdgeModel) \
+            .filter(~NodeModel.node_id.in_(all_children_query)) \
             .distinct()
-        result = query.all()
-        root_node = list({node['node_id']: node for node in map(get_node, result)}.values())
-        if 0 == len(root_node):
-            raise Exception("No root was found")
-        elif 1 != len(root_node):
-            raise Exception("A single root node could not be determined")
-        return root_node[0]
+        result = query.one()
+        return result
     except Exception as e:
         raise e
 
