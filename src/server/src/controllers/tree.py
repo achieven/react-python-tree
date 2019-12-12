@@ -12,6 +12,7 @@ def get_child_nodes(node_id):
     finally:
         session.close()
 
+
 def get_root_node():
     try:
         session = mysql.DBSession()

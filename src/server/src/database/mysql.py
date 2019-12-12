@@ -1,14 +1,12 @@
-import sqlalchemy as db
-import sqlalchemy.orm as orm
-import os
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from os import environ
 
-host = os.environ['DB_HOST']
-user = os.environ['DB_USER']
-password = os.environ['DB_PASSWORD']
+host = environ['DB_HOST']
+user = environ['DB_USER']
+password = environ['DB_PASSWORD']
 database = 'tree'
 
-engine = db.create_engine('mysql+pymysql://%s:%s@%s/%s' % (user, password, host, database))
-Base.metadata.bind = engine
-DBSession = orm.sessionmaker(bind=engine)
+engine = create_engine('mysql+pymysql://%s:%s@%s/%s' % (user, password, host, database))
+DBSession = sessionmaker(bind=engine)
+
