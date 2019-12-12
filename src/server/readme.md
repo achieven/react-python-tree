@@ -1,7 +1,7 @@
 #### prerequesites:
 
 pip3  
-python3  
+python3.6
 mysql (specifically was developed with mysql 8.0.16)
 
 #### installing:
@@ -11,4 +11,4 @@ mysql -uroot -p tree < tree_dump.mysql
 
 #### running:
 
-DB_HOST=<localhost> DB_USER=<user> DB_PASSWORD=<password> python3 src/index.py
+DB_HOST=<localhost> DB_USER=<user> DB_PASSWORD=<password> python3.6 src/index.py
