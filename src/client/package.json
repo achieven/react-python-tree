@@ -28,7 +28,7 @@
     "redux-thunk": "~2.3"
   },
   "devDependencies": {
-    "node-sass": "~4.13",
+    "node-sass": "~7.0",
     "react-scripts": "~3.2"
   }
 }
